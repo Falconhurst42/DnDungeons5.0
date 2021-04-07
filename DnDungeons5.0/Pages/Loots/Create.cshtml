@@ -1,0 +1,49 @@
+﻿@page
+@model DnDungeons.Pages.Loots.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Loot</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Loot.Name" class="control-label"></label>
+                <input asp-for="Loot.Name" class="form-control" />
+                <span asp-validation-for="Loot.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Loot.Description" class="control-label"></label>
+                <input asp-for="Loot.Description" class="form-control" />
+                <span asp-validation-for="Loot.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Loot.IsMoney" /> @Html.DisplayNameFor(model => model.Loot.IsMoney)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Loot.MonetaryValue" class="control-label"></label>
+                <input asp-for="Loot.MonetaryValue" class="form-control" />
+                <span asp-validation-for="Loot.MonetaryValue" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

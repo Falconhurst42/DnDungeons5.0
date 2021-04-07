@@ -1,0 +1,107 @@
+﻿@page "{id:int}"
+@model DnDungeons.Pages.EnemySets.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Enemy Set</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EnemySet.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.EnemySet.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EnemySet.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.EnemySet.Description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EnemySet.Created)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.EnemySet.Created)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EnemySet.LastUpdated)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.EnemySet.LastUpdated)
+        </dd>
+        <dt class="col-sm-2">
+            Enemies
+        </dt>
+        <dd class="col-sm-10">
+            @foreach (var eis in Model.EnemyInSets)
+            {
+                // generating expandible info boxes for each room in the dungeon
+
+                // pre-generate some of the strings I need for the html
+                // specifically, the unqieu identifier strings which will link the button to the togglable content
+                string headingTitle = "heading" + eis.EnemyID;
+                string collapseTitle = "collapse" + eis.EnemyID;
+                string hashedCollapseTitle = "#" + collapseTitle;
+
+                // expandible button (with edit and delete grouped in)
+                <div class="row justify-content-center no-gutters">
+                    <div class="col-10">
+                        <!-- Name (eis name overrides enemy name) -->
+                        <button class="btn btn-list btn-block text-left collapsed" data-toggle="collapse" data-target=@hashedCollapseTitle aria-expanded="false" aria-controls=@collapseTitle>
+                            @( eis.Name == null ? Html.DisplayFor(n => eis.Enemy.Name) : Html.DisplayFor(n => eis.Name) )
+                        </button>
+                    </div>
+                    <div class="col-1">
+                        <a class="btn btn-list btn-block" asp-page="/EnemyInSets/Edit" asp-route-enemySetID="@Model.EnemySet.ID" asp-route-enemyID="@eis.EnemyID" role="button">Edit</a>
+                    </div>
+                    <div class="col-1">
+                        <a class="btn btn-list btn-block" asp-page="/EnemyInSets/Delete" asp-route-enemySetID="@Model.EnemySet.ID" asp-route-enemyID="@eis.EnemyID" role="button">Delete</a>
+                    </div>
+                </div>
+                // toggleable content
+                <div id=@collapseTitle class="collapse" aria-labelledby=@headingTitle>
+                    <div class="card card-body rounded-top">
+                        <dl class="row">
+                            <!-- Description (eis descript overrides enemy descript) -->
+                            <dt class="col-sm-2">
+                                @Html.DisplayNameFor(n => eis.Description)
+                            </dt>
+                            <dd class="col-sm-10">
+                                @( eis.Description == null ? Html.DisplayFor(n => eis.Enemy.Description) : Html.DisplayFor(n => eis.Description) )
+                            </dd>
+                            <dt class="col-sm-2">
+                                @Html.DisplayNameFor(n => eis.Count)
+                            </dt>
+                            <dd class="col-sm-10">
+                                @Html.DisplayFor(n => eis.Count)
+                            </dd>
+                            <dt class="col-sm-2">
+                                @Html.DisplayNameFor(n => eis.Enemy.CR)
+                            </dt>
+                            <dd class="col-sm-10">
+                                @Html.DisplayFor(n => eis.Enemy.CR)
+                            </dd>
+                            <dt class="col-sm-2">
+                                @Html.DisplayNameFor(n => eis.Enemy.XP)
+                            </dt>
+                            <dd class="col-sm-10">
+                                @Html.DisplayFor(n => eis.Enemy.XP)
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            }
+            <a class="btn btn-secondary btn-primary" asp-page="/EnemyInSets/Create" asp-route-enemySetID="@Model.EnemySet.ID" role="button"> + </a>
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.EnemySet.ID">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>

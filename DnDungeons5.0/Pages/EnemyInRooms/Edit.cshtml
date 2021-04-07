@@ -1,0 +1,55 @@
+﻿@page
+@model DnDungeons.Pages.EnemyInRooms.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Enemy in Room</h4>
+
+<p class="text-danger">@Model.ErrorMessage</p>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="EnemyInRoom.DungeonID" />
+            <input type="hidden" asp-for="EnemyInRoom.RoomNum" />
+            <!--<input type="hidden" asp-for="EnemyInRoom.EnemyID" />-->
+            <div class="form-group">
+                <label asp-for="EnemyInRoom.EnemyID" class="control-label"></label>
+                <select asp-for="EnemyInRoom.EnemyID" class="form-control" asp-items="ViewBag.EnemyID"></select>
+                <span asp-validation-for="EnemyInRoom.EnemyID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EnemyInRoom.Count" class="control-label"></label>
+                <input asp-for="EnemyInRoom.Count" class="form-control" />
+                <span asp-validation-for="EnemyInRoom.Count" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EnemyInRoom.Name" class="control-label"></label>
+                <input asp-for="EnemyInRoom.Name" class="form-control" />
+                <span asp-validation-for="EnemyInRoom.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EnemyInRoom.Description" class="control-label"></label>
+                <input asp-for="EnemyInRoom.Description" class="form-control" />
+                <span asp-validation-for="EnemyInRoom.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="/Dungeons/Details" asp-route-id="@Model.EnemyInRoom.DungeonID">Back to Dungeon</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,54 @@
+﻿@page
+@model DnDungeons.Pages.EnemyInSets.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Enemy in Set</h4>
+
+<p class="text-danger">@Model.ErrorMessage</p>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="EnemyInSet.EnemySetID" />
+            <!-- <input type="hidden" asp-for="EnemyInSet.EnemyID" /> -->
+            <div class="form-group">
+                <label asp-for="EnemyInSet.EnemyID" class="control-label"></label>
+                <select asp-for="EnemyInSet.EnemyID" class="form-control" asp-items="ViewBag.EnemyID"></select>
+                <span asp-validation-for="EnemyInSet.EnemyID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EnemyInSet.Count" class="control-label"></label>
+                <input asp-for="EnemyInSet.Count" class="form-control" />
+                <span asp-validation-for="EnemyInSet.Count" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EnemyInSet.Name" class="control-label"></label>
+                <input asp-for="EnemyInSet.Name" class="form-control" />
+                <span asp-validation-for="EnemyInSet.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EnemyInSet.Description" class="control-label"></label>
+                <input asp-for="EnemyInSet.Description" class="form-control" />
+                <span asp-validation-for="EnemyInSet.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="/EnemySets/Details" asp-route-id="@Model.EnemyInSet.EnemySetID">Back to Enemy Set</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

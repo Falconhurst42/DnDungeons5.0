@@ -1,0 +1,44 @@
+﻿@page
+@model DnDungeons.Pages.RoomConnections.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>RoomConnection</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <!-- TODO: These labels need to be fixed, but I don't wanna touch it for fear of ?de-linking? the form -->
+            <div class="form-group">
+                <label asp-for="RoomConnection.Room2Num" class="control-label"></label>
+                <select asp-for="RoomConnection.Room2Num" class="form-control" asp-items="ViewBag.Room2Num"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="RoomConnection.ConnectionPoint1" class="control-label"></label>
+                <input asp-for="RoomConnection.ConnectionPoint1" class="form-control" />
+                <span asp-validation-for="RoomConnection.ConnectionPoint1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RoomConnection.ConnectionPoint2" class="control-label"></label>
+                <input asp-for="RoomConnection.ConnectionPoint2" class="form-control" />
+                <span asp-validation-for="RoomConnection.ConnectionPoint2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="/Dungeons/Details" asp-route-id="@Model.DungeonID">Back to Dungeon</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

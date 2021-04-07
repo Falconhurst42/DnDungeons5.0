@@ -1,0 +1,135 @@
+﻿@page
+@model DnDungeons.Pages.Rooms.AddLootSetModel
+
+@{
+    ViewData["Title"] = "AddLootSet";
+}
+
+<h1>Add Loot Set</h1>
+
+
+
+<p class="text-success">@Model.AddedMessage</p>
+
+<hr />
+<div class="row">
+    <!-- foreach LootSet -->
+    <!-- display info -->
+    <!-- make submission form -->
+    @foreach (var es in Model.LootSets)
+    {
+        // generating expandible info boxes for each room in the dungeon
+
+        // pre-generate some of the strings I need for the html
+        // specifically, the unqieu identifier strings which will link the button to the togglable content
+        string headingTitle = "heading" + es.ID;
+        string collapseTitle = "collapse" + es.ID;
+        string hashedCollapseTitle = "#" + collapseTitle;
+
+        // expandible button (with edit and delete grouped in)
+        <button class="btn btn-list btn-block text-left collapsed" data-toggle="collapse" data-target=@hashedCollapseTitle aria-expanded="false" aria-controls=@collapseTitle>
+            @Html.DisplayFor(n => es.Name)
+        </button>
+        // toggleable content
+        <div id=@collapseTitle class="collapse" aria-labelledby=@headingTitle>
+            <div class="card card-body rounded-top">
+                <dl class="row">
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => es.Name)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => es.Name)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => es.Description)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => es.Description)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => es.Created)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => es.Created)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => es.LastUpdated)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => es.LastUpdated)
+                    </dd>
+                    <dt class="col-sm-2">
+                        Enemies
+                    </dt>
+                    <dd class="col-sm-10">
+                        <!-- foreach Loot in the LootSet -->
+                        <!-- display info -->
+                        @foreach (var lis in es.LootInSet)
+                        {
+                            // generating expandible info boxes for each room in the dungeon
+
+                            // pre-generate some of the strings I need for the html
+                            // specifically, the unqieu identifier strings which will link the button to the togglable content
+                            string headingTitleLIS = "heading" + es.ID + "LIS" + lis.LootID;
+                            string collapseTitleLIS = "collapse" + es.ID + "LIS" + lis.LootID;
+                            string hashedCollapseTitleLIS = "#" + collapseTitleLIS;
+
+                            // expandible button (with edit and delete grouped in)
+
+                            <!-- Name (lis name overrides Loot name) -->
+                            <button class="btn btn-list btn-block text-left collapsed" data-toggle="collapse" data-target=@hashedCollapseTitleLIS aria-expanded="false" aria-controls=@collapseTitleLIS>
+                                @( lis.Name == null ? Html.DisplayFor(n => lis.Loot.Name) : Html.DisplayFor(n => lis.Name) )
+                            </button>
+                            // toggleable content
+                            <div id=@collapseTitleLIS class="collapse" aria-labelledby=@headingTitleLIS>
+                                <div class="card card-body rounded-top">
+                                    <dl class="row">
+                                        <!-- Description (lis descript overrides Loot descript) -->
+                                        <dt class="col-sm-2">
+                                            @Html.DisplayNameFor(n => lis.Description)
+                                        </dt>
+                                        <dd class="col-sm-10">
+                                            @( lis.Description == null ? Html.DisplayFor(n => lis.Loot.Description) : Html.DisplayFor(n => lis.Description) )
+                                        </dd>
+                                        <dt class="col-sm-2">
+                                            @Html.DisplayNameFor(n => lis.Count)
+                                        </dt>
+                                        <dd class="col-sm-10">
+                                            @Html.DisplayFor(n => lis.Count)
+                                        </dd>
+                                        <dt class="col-sm-2">
+                                            @Html.DisplayNameFor(n => lis.Loot.IsMoney)
+                                        </dt>
+                                        <dd class="col-sm-10">
+                                            @Html.DisplayFor(n => lis.Loot.IsMoney)
+                                        </dd>
+                                        <dt class="col-sm-2">
+                                            @Html.DisplayNameFor(n => lis.Loot.MonetaryValue)
+                                        </dt>
+                                        <dd class="col-sm-10">
+                                            @Html.DisplayFor(n => lis.Loot.MonetaryValue)
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        }
+                    </dd>
+                </dl>
+                <!-- make submission form to add this set -->
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" name="LootSetID" value="@es.ID" />
+                    <input type="submit" value="Add Set" class="btn btn-primary" />
+                </form>
+            </div>
+        </div>
+    }
+</div>
+
+<div>
+    <a asp-page="/Dungeons/Details" asp-route-id="@Model.DungeonID">Back to Dungeon</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

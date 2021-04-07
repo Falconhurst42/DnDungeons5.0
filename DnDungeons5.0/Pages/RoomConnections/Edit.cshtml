@@ -1,0 +1,67 @@
+﻿@page
+@model DnDungeons.Pages.RoomConnections.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>RoomConnection</h4>
+
+<p class="text-danger">@Model.ErrorMessage</p>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="RoomConnection.DungeonID" />
+            <!--
+    <input type="hidden" asp-for="RoomConnection.Room1Num" />
+    <input type="hidden" asp-for="RoomConnection.Room2Num" />
+        -->
+            @{ if (Model.IsFirst)
+                {
+                    <input type="hidden" asp-for="RoomConnection.Room1Num" />
+                    <div class="form-group">
+                        <label asp-for="RoomConnection.Room2Num" class="control-label"></label>
+                        <select asp-for="RoomConnection.Room2Num" class="form-control" asp-items="ViewBag.Room2Num"></select>
+                        <span asp-validation-for="RoomConnection.Room2Num" class="text-danger"></span>
+                    </div>
+                }
+                else
+                {
+                    <!-- swap order here? -->
+                    <input type="hidden" asp-for="RoomConnection.Room2Num" />
+                    <div class="form-group">
+                        <label asp-for="RoomConnection.Room1Num" class="control-label"></label>
+                        <select asp-for="RoomConnection.Room1Num" class="form-control" asp-items="ViewBag.Room1Num"></select>
+                        <span asp-validation-for="RoomConnection.Room1Num" class="text-danger"></span>
+                    </div>
+                }
+            }
+            <div class="form-group">
+                <label asp-for="RoomConnection.ConnectionPoint1" class="control-label"></label>
+                <input asp-for="RoomConnection.ConnectionPoint1" class="form-control" />
+                <span asp-validation-for="RoomConnection.ConnectionPoint1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RoomConnection.ConnectionPoint2" class="control-label"></label>
+                <input asp-for="RoomConnection.ConnectionPoint2" class="form-control" />
+                <span asp-validation-for="RoomConnection.ConnectionPoint2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="/Dungeons/Details" asp-route-id="@Model.RoomConnection.DungeonID">Back to Dungeon</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

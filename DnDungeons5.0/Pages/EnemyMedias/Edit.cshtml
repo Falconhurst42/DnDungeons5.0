@@ -1,0 +1,43 @@
+﻿@page
+@model DnDungeons.Pages.EnemyMedias.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Enemy Media</h4>
+
+<p class="text-danger">@Model.ErrorMessage</p>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="EnemyMedia.EnemyID" />
+            <div class="form-group">
+                <label asp-for="EnemyMedia.MediaID" class="control-label"></label>
+                <select asp-for="EnemyMedia.MediaID" class="form-control" asp-items="ViewBag.MediaID"></select>
+                <span asp-validation-for="EnemyMedia.MediaID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EnemyMedia.MediaLabel" class="control-label"></label>
+                <input asp-for="EnemyMedia.MediaLabel" class="form-control" />
+                <span asp-validation-for="EnemyMedia.MediaLabel" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="/Enemies/Details" asp-route-id="@Model.EnemyMedia.EnemyID">Back to Enemy</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

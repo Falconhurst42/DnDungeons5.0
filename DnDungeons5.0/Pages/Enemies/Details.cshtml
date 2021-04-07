@@ -1,0 +1,93 @@
+﻿@page "{id:int}"
+@model DnDungeons.Pages.Enemies.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Enemy</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Enemy.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Enemy.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Enemy.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Enemy.Description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Enemy.Created)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Enemy.Created)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Enemy.LastUpdated)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Enemy.LastUpdated)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Enemy.CR)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Enemy.CR)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Enemy.XP)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Enemy.XP)
+        </dd>
+        <dt class="col-sm-2">
+            Media
+        </dt>
+        <dd class="col-sm-10">
+            @foreach (var em in Model.EnemyMedias)
+            {
+                // generating expandible info boxes for each room in the dungeon
+
+                // pre-generate some of the strings I need for the html
+                // specifically, the unqieu identifier strings which will link the button to the togglable content
+                string headingTitle = "heading" + em.MediaID;
+                string collapseTitle = "collapse" + em.MediaID;
+                string hashedCollapseTitle = "#" + collapseTitle;
+
+                // expandible button (with edit and delete grouped in)
+                <div class="row justify-content-center no-gutters">
+                    <div class="col-10">
+                        <button class="btn btn-list btn-block text-left collapsed" data-toggle="collapse" data-target=@hashedCollapseTitle aria-expanded="false" aria-controls=@collapseTitle>
+                            @Html.DisplayFor(modelItem => em.MediaLabel)
+                        </button>
+                    </div>
+                    <div class="col-1">
+                        <a class="btn btn-list btn-block" asp-page="/EnemyMedias/Edit" asp-route-enemyID="@em.EnemyID" asp-route-mediaID="@em.MediaID" role="button">Edit</a>
+                    </div>
+                    <div class="col-1">
+                        <a class="btn btn-list btn-block" asp-page="/EnemyMedias/Delete" asp-route-enemyID="@em.EnemyID" asp-route-mediaID="@em.MediaID" role="button">Delete</a>
+                    </div>
+                </div>
+                // toggleable content
+                <div id=@collapseTitle class="collapse" aria-labelledby=@headingTitle>
+                    <div>
+                        <!-- Razorpage image rendering from https://stackoverflow.com/questions/17952514/asp-net-mvc-how-to-display-a-byte-array-image-from-model -->
+                        <img src="data:image;base64,@System.Convert.ToBase64String(em.Media.File)" class="img-fluid rounded-0"/>
+                    </div>
+                </div>
+            }
+            <a class="btn btn-secondary btn-primary" asp-page="/EnemyMedias/Create" asp-route-enemyID="@Model.Enemy.ID" role="button"> + </a>
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.Enemy.ID">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>

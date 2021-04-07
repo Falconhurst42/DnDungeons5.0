@@ -1,0 +1,48 @@
+﻿@page "{lootSetID:int}"
+@model DnDungeons.Pages.LootInSets.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Loot in Set</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="LootInSet.LootID" class="control-label"></label>
+                <select asp-for="LootInSet.LootID" class="form-control" asp-items="ViewBag.LootID"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="LootInSet.Count" class="control-label"></label>
+                <input asp-for="LootInSet.Count" class="form-control" />
+                <span asp-validation-for="LootInSet.Count" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LootInSet.Name" class="control-label"></label>
+                <input asp-for="LootInSet.Name" class="form-control" />
+                <span asp-validation-for="LootInSet.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LootInSet.Description" class="control-label"></label>
+                <input asp-for="LootInSet.Description" class="form-control" />
+                <span asp-validation-for="LootInSet.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="/LootSets/Details" asp-route-id="@Model.LootSetID">Back to Loot Set</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

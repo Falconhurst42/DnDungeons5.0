@@ -1,0 +1,49 @@
+﻿@page "{id:int}"
+@model DnDungeons.Pages.Medias.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Media</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Media.ID" />
+            <div class="form-group">
+                <label asp-for="Media.Name" class="control-label"></label>
+                <input asp-for="Media.Name" class="form-control" />
+                <span asp-validation-for="Media.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Media.Description" class="control-label"></label>
+                <input asp-for="Media.Description" class="form-control" />
+                <span asp-validation-for="Media.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Media.File)
+            </dt>
+            <dd class="col-sm-10">
+                <!-- Razorpage image rendering from https://stackoverflow.com/questions/17952514/asp-net-mvc-how-to-display-a-byte-array-image-from-model -->
+                <img src="data:image;base64,@System.Convert.ToBase64String(Model.Media.File)" width="300" height="300" class="rounded-0" />
+            </dd>
+        </dl>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

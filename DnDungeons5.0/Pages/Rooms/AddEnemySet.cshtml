@@ -1,0 +1,135 @@
+﻿@page
+@model DnDungeons.Pages.Rooms.AddEnemySetModel
+
+@{
+    ViewData["Title"] = "AddEnemySet";
+}
+
+<h1>Add Enemy Set</h1>
+
+
+
+<p class="text-success">@Model.AddedMessage</p>
+
+<hr />
+<div class="row">
+    <!-- foreach EnemySet -->
+    <!-- display info -->
+    <!-- make submission form -->
+    @foreach (var es in Model.EnemySets)
+    {
+        // generating expandible info boxes for each room in the dungeon
+
+        // pre-generate some of the strings I need for the html
+        // specifically, the unqieu identifier strings which will link the button to the togglable content
+        string headingTitle = "heading" + es.ID;
+        string collapseTitle = "collapse" + es.ID;
+        string hashedCollapseTitle = "#" + collapseTitle;
+
+        // expandible button (with edit and delete grouped in)
+        <button class="btn btn-list btn-block text-left collapsed" data-toggle="collapse" data-target=@hashedCollapseTitle aria-expanded="false" aria-controls=@collapseTitle>
+            @Html.DisplayFor(n => es.Name)
+        </button>
+        // toggleable content
+        <div id=@collapseTitle class="collapse" aria-labelledby=@headingTitle>
+            <div class="card card-body rounded-top">
+                <dl class="row">
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => es.Name)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => es.Name)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => es.Description)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => es.Description)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => es.Created)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => es.Created)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => es.LastUpdated)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => es.LastUpdated)
+                    </dd>
+                    <dt class="col-sm-2">
+                        Enemies
+                    </dt>
+                    <dd class="col-sm-10">
+                        <!-- foreach Enemy in the EnemySet -->
+                        <!-- display info -->
+                        @foreach (var eis in es.EnemiesInSet)
+                        {
+                            // generating expandible info boxes for each room in the dungeon
+
+                            // pre-generate some of the strings I need for the html
+                            // specifically, the unqieu identifier strings which will link the button to the togglable content
+                            string headingTitleEIS = "heading" + es.ID + "EIS" + eis.EnemyID;
+                            string collapseTitleEIS = "collapse" + es.ID + "EIS" + eis.EnemyID;
+                            string hashedCollapseTitleEIS = "#" + collapseTitleEIS;
+
+                            // expandible button (with edit and delete grouped in)
+
+                            <!-- Name (eis name overrides enemy name) -->
+                            <button class="btn btn-list btn-block text-left collapsed" data-toggle="collapse" data-target=@hashedCollapseTitleEIS aria-expanded="false" aria-controls=@collapseTitleEIS>
+                                @( eis.Name == null ? Html.DisplayFor(n => eis.Enemy.Name) : Html.DisplayFor(n => eis.Name) )
+                            </button>
+                            // toggleable content
+                            <div id=@collapseTitleEIS class="collapse" aria-labelledby=@headingTitleEIS>
+                                <div class="card card-body rounded-top">
+                                    <dl class="row">
+                                        <!-- Description (eis descript overrides enemy descript) -->
+                                        <dt class="col-sm-2">
+                                            @Html.DisplayNameFor(n => eis.Description)
+                                        </dt>
+                                        <dd class="col-sm-10">
+                                            @( eis.Description == null ? Html.DisplayFor(n => eis.Enemy.Description) : Html.DisplayFor(n => eis.Description) )
+                                        </dd>
+                                        <dt class="col-sm-2">
+                                            @Html.DisplayNameFor(n => eis.Count)
+                                        </dt>
+                                        <dd class="col-sm-10">
+                                            @Html.DisplayFor(n => eis.Count)
+                                        </dd>
+                                        <dt class="col-sm-2">
+                                            @Html.DisplayNameFor(n => eis.Enemy.CR)
+                                        </dt>
+                                        <dd class="col-sm-10">
+                                            @Html.DisplayFor(n => eis.Enemy.CR)
+                                        </dd>
+                                        <dt class="col-sm-2">
+                                            @Html.DisplayNameFor(n => eis.Enemy.XP)
+                                        </dt>
+                                        <dd class="col-sm-10">
+                                            @Html.DisplayFor(n => eis.Enemy.XP)
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        }
+                    </dd>
+                </dl>
+                <!-- make submission form to add this set -->
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" name="EnemySetID" value="@es.ID" />
+                    <input type="submit" value="Add Set" class="btn btn-primary" />
+                </form>
+            </div>
+        </div>
+    }
+</div>
+
+<div>
+    <a asp-page="/Dungeons/Details" asp-route-id="@Model.DungeonID">Back to Dungeon</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

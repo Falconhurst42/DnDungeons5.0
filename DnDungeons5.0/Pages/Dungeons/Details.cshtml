@@ -1,0 +1,297 @@
+﻿@page "{id:int}"
+@model DnDungeons.Pages.Dungeons.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Dungeon</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DungeonDetails.Dungeon.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DungeonDetails.Dungeon.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DungeonDetails.Dungeon.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DungeonDetails.Dungeon.Description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DungeonDetails.Dungeon.Created)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DungeonDetails.Dungeon.Created)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DungeonDetails.Dungeon.LastUpdated)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DungeonDetails.Dungeon.LastUpdated)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DungeonDetails.Dungeon.Rooms)
+        </dt>
+        <dd class="col-sm-10">
+            <!-- the place I found out about html commenting: https://www.w3schools.com/html/html_comments.asp -->
+            <!-- bootstrap accordion reference: https://getbootstrap.com/docs/4.0/components/collapse/#accordion-example -->
+            <!-- bootstrap button reference: https://getbootstrap.com/docs/4.0/components/buttons/ -->
+            <!-- bootstrap border reference: https://getbootstrap.com/docs/4.0/utilities/borders/ -->
+            <!-- bootstrap grid reference: https://getbootstrap.com/docs/4.0/layout/grid/ -->
+            @foreach (var item in Model.DungeonDetails.RoomInfo)
+            {
+                // generating expandible info boxes for each room in the dungeon
+
+                // pre-generate some of the strings I need for the html
+                string headingTitle = "heading" + item.Item1.RoomNumber;
+                string collapseTitle = "collapse" + item.Item1.RoomNumber;
+                string hashedCollapseTitle = "#" + collapseTitle;
+
+                // expandible button
+                <div class="row justify-content-center no-gutters">
+                    <div class="col-10">
+                        <button class="btn btn-list btn-block text-left collapsed" data-toggle="collapse" data-target=@hashedCollapseTitle aria-expanded="false" aria-controls=@collapseTitle>
+                            @Html.DisplayFor(modelItem => item.Item1.Name)
+                        </button>
+                    </div>
+                    <div class="col-1">
+                        <a class="btn btn-list btn-block" asp-page="/Rooms/Edit" asp-route-roomNumber="@item.Item1.RoomNumber" asp-route-dungeonID="@item.Item1.DungeonID" role="button">Edit</a>
+                    </div>
+                    <div class="col-1">
+                        <a class="btn btn-list btn-block" asp-page="/Rooms/Delete" asp-route-roomNumber="@item.Item1.RoomNumber" asp-route-dungeonID="@item.Item1.DungeonID" role="button">Delete</a>
+                    </div>
+                </div>
+                // toggleable content
+                <div id=@collapseTitle class="collapse" aria-labelledby=@headingTitle>
+                    <div class="card card-body rounded-top">
+                        <dl class="row">
+                            <dt class="col-sm-2">
+                                @Html.DisplayNameFor(n => item.Item1.RoomNumber)
+                            </dt>
+                            <dd class="col-sm-10">
+                                @Html.DisplayFor(n => item.Item1.RoomNumber)
+                            </dd>
+                            <dt class="col-sm-2">
+                                @Html.DisplayNameFor(d => item.Item1.Description)
+                            </dt>
+                            <dd class="col-sm-10">
+                                @Html.DisplayFor(d => item.Item1.Description)
+                            </dd>
+                            <dt class="col-sm-2">
+                                @Html.DisplayNameFor(u => item.Item1.LastUpdated)
+                            </dt>
+                            <dd class="col-sm-10">
+                                @Html.DisplayFor(u => item.Item1.LastUpdated)
+                            </dd>
+                            <!-- Table of associated enemies (if there are any) -->
+                            <dt class="col-sm-2">
+                                @Html.DisplayNameFor(e => item.Item1.Enemies)
+                            </dt>
+                            <dd class="col-sm-10">
+                                <!-- Enemy Table -->
+                                @if (item.Item2.Count() != 0)
+                                {
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th style="vertical-align:text-top">
+                                                    Name
+                                                </th>
+                                                <th style="vertical-align:text-top">
+                                                    Description
+                                                </th>
+                                                <th style="vertical-align:text-top">
+                                                    Count
+                                                </th>
+                                                <th style="vertical-align:text-top">
+                                                    CR
+                                                </th>
+                                                <th style="vertical-align:text-top">
+                                                    XP
+                                                </th>
+                                                <th></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var etup in item.Item2)
+                                            {
+                                                var eir = etup.Item1;
+                                                var enemy = etup.Item2;
+
+                                                <tr>
+                                                    <td>
+                                                        @(eir.Name == null ? eir.Enemy.Name : eir.Name)
+                                                    </td>
+                                                    <td>
+                                                        @(eir.Description == null ? eir.Enemy.Description : eir.Description)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(c => eir.Count)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(c => enemy.CR)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(c => enemy.XP)
+                                                    </td>
+                                                    <td>
+                                                        <a class="btn btn-list btn-block" asp-page="/EnemyInRooms/Edit" asp-route-roomNumber="@item.Item1.RoomNumber" asp-route-dungeonID="@item.Item1.DungeonID" asp-route-enemyID="@enemy.ID" role="button">Edit</a>
+                                                    </td>
+                                                    <td>
+                                                        <a class="btn btn-list btn-block" asp-page="/EnemyInRooms/Delete" asp-route-roomNumber="@item.Item1.RoomNumber" asp-route-dungeonID="@item.Item1.DungeonID" asp-route-enemyID="@enemy.ID" role="button">Remove</a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with enemy-adding buttons">
+                                    <div class="btn-group mr-2" role="group" aria-label="Add single enemy">
+                                        <a class="btn btn-secondary btn-primary" asp-page="/EnemyInRooms/Create" asp-route-roomNumber="@item.Item1.RoomNumber" asp-route-dungeonID="@item.Item1.DungeonID" role="button"> Add Enemy </a>
+                                    </div>
+                                    <div class="btn-group" role="group" aria-label="Add enemy set">
+                                        <a class="btn btn-secondary btn-primary" asp-page="/Rooms/AddEnemySet" asp-route-roomNumber="@item.Item1.RoomNumber" asp-route-dungeonID="@item.Item1.DungeonID" role="button"> Add Enemy Set </a>
+                                    </div>
+                                 </div>
+                            </dd>
+                            <!-- Table of associated enemies (if there are any) -->
+                            <dt class="col-sm-2">
+                                @Html.DisplayNameFor(modelItem => item.Item1.Loot)
+                            </dt>
+                            <dd class="col-sm-10">
+                                <!-- Loot Table -->
+                                @if (item.Item3.Count() != 0)
+                                {
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th style="vertical-align:text-top">
+                                                    Name
+                                                </th>
+                                                <th style="vertical-align:text-top">
+                                                    Description
+                                                </th>
+                                                <th style="vertical-align:text-top">
+                                                    Count
+                                                </th>
+                                                <th style="vertical-align:text-top">
+                                                    Total Value (cp)
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var ltup in item.Item3)
+                                            {
+                                                var lir = ltup.Item1;
+                                                var loot = ltup.Item2;
+
+                                                <tr>
+                                                    <td>
+                                                        @(lir.Name == null ? lir.Loot.Name : lir.Name)
+                                                    </td>
+                                                    <td>
+                                                        @(lir.Description == null ? lir.Loot.Description : lir.Description)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(c => lir.Count)
+                                                    </td>
+                                                    <td>
+                                                        @{ int val = loot.MonetaryValue * lir.Count; }
+                                                        @if (val != 0)
+                                                        {
+                                                            <p>@Html.DisplayFor(v => val)</p>
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        <a class="btn btn-list btn-block" asp-page="/LootInRooms/Edit" asp-route-roomNumber="@item.Item1.RoomNumber" asp-route-dungeonID="@item.Item1.DungeonID" asp-route-lootID="@loot.ID" role="button">Edit</a>
+                                                    </td>
+                                                    <td>
+                                                        <a class="btn btn-list btn-block" asp-page="/LootInRooms/Delete" asp-route-roomNumber="@item.Item1.RoomNumber" asp-route-dungeonID="@item.Item1.DungeonID" asp-route-lootID="@loot.ID" role="button">Remove</a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with loot-adding buttons">
+                                <div class="btn-group mr-2" role="group" aria-label="Add single loot">
+                                    <a class="btn btn-secondary btn-primary" asp-page="/LootInRooms/Create" asp-route-roomNumber="@item.Item1.RoomNumber" asp-route-dungeonID="@item.Item1.DungeonID" role="button"> Add Loot </a>
+                                </div>
+                                <div class="btn-group" role="group" aria-label="Add loot set">
+                                    <a class="btn btn-secondary btn-primary" asp-page="/Rooms/AddLootSet" asp-route-roomNumber="@item.Item1.RoomNumber" asp-route-dungeonID="@item.Item1.DungeonID" role="button"> Add Loot Set </a>
+                                </div>
+                            </div>
+                            </dd>
+                            <!-- Table of associated room connections (if there are any) -->
+                            <dt class="col-sm-2">
+                                Room Connections
+                            </dt>
+                            <dd class="col-sm-10">
+                                @if (item.Item4.Count() != 0)
+                                {
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th style="vertical-align:text-top">
+                                                    Destination
+                                                </th>
+                                                <th style="vertical-align:text-top">
+                                                    Origin Connection
+                                                </th>
+                                                <th style="vertical-align:text-top">
+                                                    Destination Connection
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var rctup in item.Item4)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @rctup.Item3.Name
+                                                    </td>
+                                                    <td>
+                                                        @{
+                                                            var conn_1 = (rctup.Item1 ? rctup.Item2.ConnectionPoint1 : rctup.Item2.ConnectionPoint2);
+                                                        }
+                                                        @conn_1
+                                                    </td>
+                                                    <td>
+                                                        @{
+                                                            var conn_2 = (rctup.Item1 ? rctup.Item2.ConnectionPoint2 : rctup.Item2.ConnectionPoint1);
+                                                        }
+                                                        @conn_2
+                                                    </td>
+                                                    <td>
+                                                        <a class="btn btn-list btn-block" asp-page="/RoomConnections/Edit" asp-route-Room1Number="@rctup.Item2.Room1Num" asp-route-Room2Number="@rctup.Item2.Room2Num" asp-route-dungeonID="@item.Item1.DungeonID" asp-route-isFirst="@rctup.Item1" role="button">Edit</a>
+                                                    </td>
+                                                    <td>
+                                                        <a class="btn btn-list btn-block" asp-page="/RoomConnections/Delete" asp-route-Room1Number="@rctup.Item2.Room1Num" asp-route-Room2Number="@(rctup.Item2.Room2Num)" asp-route-dungeonID="@item.Item1.DungeonID" role="button">Delete</a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                                <a class="btn btn-secondary btn-primary" asp-page="/RoomConnections/Create" asp-route-roomNumber="@item.Item1.RoomNumber" asp-route-dungeonID="@item.Item1.DungeonID" role="button"> Add Room Connection </a>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            }
+        <p></p>
+        <a class="btn btn-secondary btn-primary" asp-page="/Rooms/Create" asp-route-roomNumber="@Model.NextRoomNumber" asp-route-dungeonID="@Model.DungeonDetails.Dungeon.ID" role="button"> + </a>
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.DungeonDetails.Dungeon.ID">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>
